@@ -14,6 +14,8 @@ public class Empleado
 
     [ForeignKey(nameof(PersonaId))]
     public virtual Persona DatosPersonales { get; set; } = null!;
+    public decimal LimiteDeCredito { get; internal set; }
+
     public static Empleado Create(
         string nombre,
         DateTime? fechaNacimiento,
