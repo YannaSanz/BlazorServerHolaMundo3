@@ -12,6 +12,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 //Agregar el servico para la gestion de los clientes
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

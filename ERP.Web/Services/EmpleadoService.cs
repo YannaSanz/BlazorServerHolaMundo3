@@ -16,7 +16,7 @@ namespace ERP.Web.Services
     public class EmpleadoService : IEmpleadoService
     {
         private readonly AppDbContext _context;
-        private List<EmpleadoDto> empleado;
+        //public List<EmpleadoDto> empleado;
 
         public EmpleadoService(AppDbContext context)
         {
@@ -25,7 +25,7 @@ namespace ERP.Web.Services
         ///Consultar los clientes existentes
         public async Task<List<EmpleadoDto>> Consultar(string filtro)
         {
-            var clientes = await
+            var empleado = await
                 _context.Empleados
                 .Include(c => c.DatosPersonales)
                 .Where(c => c.DatosPersonales.Nombre.Contains(filtro))
@@ -35,7 +35,7 @@ namespace ERP.Web.Services
                     {
                         Id = c.Id,
                         PersonaId = c.PersonaId,
-                        LimiteDeCredito = c.LimiteDeCredito,
+                        Sueldo = c.Sueldo,
                         DatosPersonales = new PersonaDto()
                         {
                             Id = c.DatosPersonales.Id,
@@ -49,34 +49,34 @@ namespace ERP.Web.Services
         }
         public async Task<bool> Crear(EmpleadoDto request)
         {
-            var cliente = Cliente.Create(
+            var empleado = Empleado.Create(
                 request.DatosPersonales.Nombre,
                 request.DatosPersonales.FechaDeNacimiento,
-                request.LimiteDeCredito
+                request.Sueldo
             );
-            _context.Clientes.Add(cliente);
+            _context.Empleados.Add(empleado);
             ;
             return (await _context.SaveChangesAsync()) > 0;
         }
         public async Task<bool> Modificar(EmpleadoDto request)
         {
             //1. Busco el empleado
-            var cliente = await _context.Empleados
+            var empleado = await _context.Empleados
                 .Include(c => c.DatosPersonales)
                 .FirstOrDefaultAsync(c => c.Id == request.Id);
             //2. Modifico el empleado
-            cliente!.DatosPersonales.Nombre = request.DatosPersonales.Nombre;
-            cliente!.DatosPersonales.FechaDeNacimiento = request.DatosPersonales.FechaDeNacimiento;
-            cliente!.LimiteDeCredito = request.LimiteDeCredito;
+            empleado!.DatosPersonales.Nombre = request.DatosPersonales.Nombre;
+            empleado!.DatosPersonales.FechaDeNacimiento = request.DatosPersonales.FechaDeNacimiento;
+            empleado!.Sueldo = request.Sueldo;
             //Guardo los cambios
             return (await _context.SaveChangesAsync()) > 0;
         }
         public async Task<bool> Eliminar(int Id)
         {
-            var cliente = await _context.Clientes
+            var empleado = await _context.Empleados
                 .FirstOrDefaultAsync(c => c.Id == Id);
 
-            _context.Clientes.Remove(cliente!);
+            _context.Empleados.Remove(empleado!);
 
             return (await _context.SaveChangesAsync()) > 0;
         }
